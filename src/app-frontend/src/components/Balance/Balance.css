@@ -1,4 +1,4 @@
-.balance {
+.balance.loading {
   outline: 1px solid #18003371;
   padding: 20px 30px;
   border-radius: 10px;
@@ -11,6 +11,28 @@
   cursor: pointer;
 }
 
-.balance-amount {
+.currency-image-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ccc;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.balance-amount-placeholder {
+  width: 100px;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
   margin-top: 10px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }

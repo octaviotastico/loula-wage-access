@@ -5,7 +5,22 @@ import React from "react";
 import TransactionItem from "../TransactionItem";
 import "./TransactionList.css";
 
-const TransactionList = ({ transactions }) => {
+const TransactionList = ({ transactions, loading, error }) => {
+  if (!transactions.length) {
+    return (
+      <section className="transactions">
+        <h3>Loading your recent transactions</h3>
+        <div className="transaction-list">
+          <TransactionItem loading={loading} error={error} />
+          <TransactionItem loading={loading} error={error} />
+          <TransactionItem loading={loading} error={error} />
+          <TransactionItem loading={loading} error={error} />
+          <TransactionItem loading={loading} error={error} />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="transactions">
       <h3>Recent Transactions</h3>
