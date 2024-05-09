@@ -2,10 +2,10 @@
 FROM node:20
 
 # Set the working directory in the container
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app-backend
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY . .
+# Copy the current directory contents into the container at /usr/src
+ADD ./app-backend .
 
 # Install any needed packages specified in package.json
 RUN npm install
@@ -17,4 +17,5 @@ EXPOSE 3000
 ENV NAME World
 
 # Run app.js when the container launches
-CMD ["node", "app.js"]
+RUN ["npm", "start"]
+# ENTRYPOINT [ "sh" ]
