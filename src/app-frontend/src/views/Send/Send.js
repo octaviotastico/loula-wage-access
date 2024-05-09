@@ -7,7 +7,7 @@ import "./Send.css";
 import { currency_char, formatMoney } from "../../utils/currency";
 
 function Send() {
-  const [employeeInfo, setEmployeeInfo] = useState([]);
+  const [employeeBalances, setEmployeeBalances] = useState([]);
 
   const navigate = useNavigate();
   const employeeId = "E01";
@@ -16,7 +16,8 @@ function Send() {
     axios
       .get(`http://localhost:3000/employee/balance/${employeeId}`)
       .then((response) => {
-        setEmployeeInfo(response.data);
+        const { balances } = response.data || [];
+        setEmployeeBalances(balances);
       })
       .catch((error) => {
         console.error("Error fetching balances:", error);
@@ -85,7 +86,7 @@ function Send() {
     );
   }
 
-  const sufficientBalance = !amount || (currency && amount && employeeInfo.balances?.find((elem) => elem.currency === currency).amount >= Number(amount));
+  const sufficientBalance = !amount || (currency && amount && employeeBalances.find((elem) => elem.currency === currency).amount >= Number(amount));
 
   return (
     <div className="send">
@@ -115,7 +116,7 @@ function Send() {
             <span className="material-symbols-rounded">info</span>
             <span>
               Your balance in {currency} is {currency_char[currency]}
-              {formatMoney(employeeInfo.balances?.find((elem) => elem.currency === currency).amount)}
+              {formatMoney(employeeBalances.find((elem) => elem.currency === currency).amount)}
             </span>
           </div>
         )}

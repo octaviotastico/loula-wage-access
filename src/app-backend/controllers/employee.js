@@ -1,15 +1,37 @@
 import db from "../config/db.js";
 
+export const getGeneralInfo = async (req, res) => {
+  const { employeeId } = req.params;
+
+  try {
+    const { rows } = await db.query(`
+      SELECT
+        name,
+        total_earnings,
+        monthly_salary
+      FROM
+        employees
+      WHERE
+        employee_id = $1;
+    `, [employeeId]);
+
+    if (rows.length > 0) {
+      res.json(rows[0]);
+    } else {
+      res.status(404).send("Employee not found");
+    }
+  } catch (error) {
+    console.error("Error fetching employee general info:", error);
+    res.status(500).send("Server error");
+  }
+};
+
 export const getBalance = async (req, res) => {
   const { employeeId } = req.params;
 
   try {
     const { rows } = await db.query(`
       SELECT
-        e.employee_id,
-        e.name,
-        e.total_earnings,
-        e.monthly_salary,
         json_agg(
           json_build_object(
             'currency', b.currency,
@@ -23,7 +45,7 @@ export const getBalance = async (req, res) => {
       WHERE
         e.employee_id = $1
       GROUP BY
-        e.employee_id, e.name, e.total_earnings, e.monthly_salary;
+        e.employee_id;
     `, [employeeId]);
 
     if (rows.length > 0) {

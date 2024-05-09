@@ -1,16 +1,21 @@
 import express from "express";
 import {
+  // Employee endpoints
+  getGeneralInfo,
   getBalance,
-  requestAdvance,
-  spendMoney,
-  performTransfer,
   getTransactions,
+  // Wage Advance endpoints
   checkAdvanceAvailable,
+  requestAdvance,
+  // Transaction endpoints
+  performTransfer,
+  spendMoney,
 } from "../controllers/employee.js";
 
 const router = express.Router();
 
 // Employee endpoints
+router.get("/employee/general/:employeeId", getGeneralInfo); // Get the balance of a specific employee
 router.get("/employee/balance/:employeeId", getBalance); // Get the balance of a specific employee
 router.get("/employee/transactions/:employeeId", getTransactions); // Get all the transactions of a specific employee
 

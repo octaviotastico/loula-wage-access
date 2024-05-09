@@ -12,7 +12,7 @@ import TransactionList from "../../components/TransactionList";
 import "./Home.css";
 
 function Home() {
-  const [employeeInfo, setEmployeeInfo] = useState([]);
+  const [employeeBalances, setEmployeeBalances] = useState([]);
   const [transactionsInfo, setTransactionsInfo] = useState([]);
 
   const employeeId = "E01";
@@ -21,7 +21,8 @@ function Home() {
     axios
       .get(`http://localhost:3000/employee/balance/${employeeId}`)
       .then((response) => {
-        setEmployeeInfo(response.data);
+        const { balances } = response.data || [];
+        setEmployeeBalances(balances);
       })
       .catch((error) => {
         console.error("Error fetching balances:", error);
@@ -41,11 +42,11 @@ function Home() {
 
   return (
     <div className="home">
-      <LeftNav balances={employeeInfo.balances || []} />
+      <LeftNav balances={employeeBalances} />
       <section className="home-content">
         <div className="content-wrapper">
           <Actions />
-          <BalanceList balances={employeeInfo.balances || []} />
+          <BalanceList balances={employeeBalances} />
           <TransactionList transactions={transactionsInfo} />
         </div>
       </section>
