@@ -16,7 +16,7 @@ app.use(cors());
 // Endpoints
 app.use('/', employeeRoutes);
 app.get('/', (req, res) => {
-  res.send('Hello!!! Wage Access Platform API');
+  res.send('Wage Access Platform API');
 });
 
 // Server
