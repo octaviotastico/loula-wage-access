@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // Styles
@@ -8,6 +9,7 @@ import { currency_char, formatMoney } from "../../utils/currency";
 function Send() {
   const [employeeInfo, setEmployeeInfo] = useState([]);
 
+  const navigate = useNavigate();
   const employeeId = "E01";
 
   useEffect(() => {
@@ -24,12 +26,13 @@ function Send() {
   const [amount, setAmount] = useState("");
   const [formattedAmount, setFormattedAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
-  const [recipientId, setRecipientId] = useState("E02");
+  const [recipientId, setRecipientId] = useState("E03");
   const [description, setDescription] = useState("");
+  const [transactionSuccess, setTransactionSuccess] = useState(false);
 
   const handleSendTransfer = () => {
     const transaction = {
-      senderId: "E01", // TODO: Get the sender ID from the logged-in user
+      senderId: employeeId, // TODO: Get the sender ID from the logged-in user
       recipientId,
       amount,
       currency,
@@ -40,11 +43,10 @@ function Send() {
       .post("http://localhost:3000/transactions/transfer", transaction)
       .then((response) => {
         console.log("Transaction sent successfully:", response.data);
-        // Show success message
+        setTransactionSuccess(true);
       })
       .catch((error) => {
         console.error("Error sending transaction:", error);
-        // Show error message
       });
   };
 
@@ -67,6 +69,21 @@ function Send() {
   const unformatAmount = () => {
     setFormattedAmount(amount); // Reset to plain number when focused
   };
+
+  if (transactionSuccess) {
+    return (
+      <div className="success-message">
+        <h1>
+          Transfer Done Successfully! <span className="done-check material-symbols-rounded">done</span>
+        </h1>
+        <p className="success-messages">Amount: {amount}</p>
+        <p className="success-messages">Currency: {currency}</p>
+        <p className="success-messages">Recipient ID: {recipientId}</p>
+        <p className="success-messages">Description: {description || "Money transfer"}</p>
+        <button className="back-button" onClick={() => navigate('/')}>Return Home</button>
+      </div>
+    );
+  }
 
   return (
     <div className="send">

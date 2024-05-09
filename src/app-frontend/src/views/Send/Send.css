@@ -51,7 +51,7 @@
   resize: none;
 }
 
-.send-button {
+.send-button, .back-button {
   padding: 10px 20px;
   font-size: 16px;
   color: black;
@@ -65,6 +65,28 @@
   padding-right: 8px;
 }
 
-.send-button:hover {
+.send-button:hover, .back-button:hover {
   background-color: #8bdb66;
+}
+
+.back-button {
+  padding: 10px 20px;
+  margin-top: 20px;
+}
+
+.success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: calc(100vh - 160px);
+  justify-content: center;
+}
+
+.done-check {
+  color: #62bd2a;
+  font-size: 32px;
+}
+
+.success-messages {
+  margin: 2px;
 }
