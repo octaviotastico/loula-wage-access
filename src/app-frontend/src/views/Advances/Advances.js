@@ -6,10 +6,9 @@ import axios from "axios";
 // Local Components
 import TransactionList from "../../components/TransactionList";
 import { currency_symbols, formatMoney } from "../../utils/currency";
+import { API_BASE_URL } from "../../utils/constants";
 import { useEmployeeData, useAdvanceData } from "./hooks";
 import "./Advances.css";
-
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Advances = () => {
   const employeeId = "E01";

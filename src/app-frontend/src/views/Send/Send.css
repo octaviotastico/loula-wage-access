@@ -1,11 +1,16 @@
 .send {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   height: calc(100vh - 160px);
   width: 100%;
+}
+
+.send-container {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
+  width: 50%;
 }
 
 .amount-section, .to-section, .message-section, .send-section {

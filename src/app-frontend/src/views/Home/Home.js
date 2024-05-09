@@ -3,15 +3,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 // Local Components
+// import LeftNav from "../../components/LeftNav";
 import Actions from "../../components/Actions";
 import BalanceList from "../../components/BalanceList";
-// import LeftNav from "../../components/LeftNav";
 import TransactionList from "../../components/TransactionList";
-
-// Styles
+import { API_BASE_URL } from '../../utils/constants';
 import "./Home.css";
-
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 // Custom hook for fetching data
 function useEmployeeData(employeeId) {
