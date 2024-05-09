@@ -6,6 +6,7 @@ import './Balance.css';
 
 const Balance = ({ balance, loading, error }) => {
   if (loading || error) {
+    console.log("1111111111");
     return (
       <div className="balance loading">
         <div className="currency-image-placeholder"></div>
@@ -14,6 +15,7 @@ const Balance = ({ balance, loading, error }) => {
     );
   }
 
+  console.log("2222222222");
   return (
     <div className="balance">
       <img src={currency_images[balance.currency]} alt={balance.currency} />

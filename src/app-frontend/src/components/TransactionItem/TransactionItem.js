@@ -7,6 +7,7 @@ import "./TransactionItem.css";
 
 const TransactionItem = ({ transaction, loading, error }) => {
   if (loading || error) {
+    console.log("1111111111");
     return (
       <div className="transaction-item loading">
         <div className="transaction-icon-placeholder"></div>
@@ -19,6 +20,7 @@ const TransactionItem = ({ transaction, loading, error }) => {
     );
   }
 
+  console.log("2222222222");
   return (
     <div className="transaction-item">
       <div className="transaction-icon">

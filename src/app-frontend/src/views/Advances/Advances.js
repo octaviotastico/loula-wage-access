@@ -174,7 +174,7 @@ const Advances = () => {
           }`}
           onClick={handleAskNewAdvancement}
         >
-          Send <span className="material-symbols-rounded">chevron_right</span>
+          Get advance <span className="material-symbols-rounded">chevron_right</span>
         </button>
       </section>
     </div>

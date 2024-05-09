@@ -11,7 +11,7 @@ import TransactionList from "../../components/TransactionList";
 // Styles
 import "./Home.css";
 
-const API_BASE_URL = "localhost:3000";
+const API_BASE_URL = "http://localhost:3000";
 
 // Custom hook for fetching data
 function useEmployeeData(employeeId) {
