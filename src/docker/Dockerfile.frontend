@@ -1,0 +1,23 @@
+# Use an official Node runtime as a parent image
+FROM node:20
+
+# Set the working directory in the container
+WORKDIR /usr/src/app-frontend
+
+# Copy the current directory contents into the container at /usr/src
+ADD ./app-frontend .
+
+# Install any needed packages specified in package.json
+RUN npm install
+
+# Build the React application
+RUN npm run build
+
+# Install serve to serve the production build
+RUN npm install -g serve
+
+# Make port 2424 available to the world outside this container
+EXPOSE 2424
+
+# Run serve when the container launches
+ENTRYPOINT ["serve", "-s", "build", "-l", "2424"]

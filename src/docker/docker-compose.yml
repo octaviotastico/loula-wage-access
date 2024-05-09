@@ -12,8 +12,19 @@ services:
       - DB_USER=postgres
       - DB_PASS=password
       - DB_NAME=loulawallet
+      - DB_PORT=5432
     depends_on:
       - database
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.frontend
+    container_name: react-frontend
+    ports:
+      - "2424:2424"
+    depends_on:
+      - backend
 
   database:
     container_name: postgres-db
