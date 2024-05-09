@@ -5,7 +5,6 @@ import React from "react";
 import { formatMoney } from "../../utils/currency";
 import "./TransactionItem.css";
 
-
 const TransactionItem = ({ transaction }) => {
   return (
     <div className="transaction-item">
@@ -14,15 +13,17 @@ const TransactionItem = ({ transaction }) => {
       ) : (
         <span className="material-symbols-rounded">arrow_upward</span>
       )}
-      <div>{transaction.date}</div>
+      <div>{transaction.recipient_name ? `To: ${transaction.recipient_name}` : `Spent on: ${transaction.vendor}`}</div>
       <div>{transaction.description}</div>
-      <div className={`${transaction.amount > 0 ? 'positive-transaction' : ''}`}>
+      <div>{new Date(transaction.transaction_date).toLocaleDateString()}</div>
+      <div>Type {transaction.type}</div>
+      <div className={`${transaction.amount > 0 ? "positive-transaction" : ""}`}>
         {transaction.amount > 0 ? "+ " : ""}
         {formatMoney(Math.abs(transaction.amount))}
         {transaction.currency}
       </div>
     </div>
   );
-}
+};
 
 export default TransactionItem;
