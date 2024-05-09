@@ -1,0 +1,9 @@
+.home {
+  display: flex;
+  flex-direction: row;
+}
+
+.home-content {
+  width: 100%;
+  height: 100%;
+}
