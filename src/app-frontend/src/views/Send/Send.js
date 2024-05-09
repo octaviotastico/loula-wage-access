@@ -85,7 +85,7 @@ function Send() {
     );
   }
 
-  const sufficientBalance = currency && amount && employeeInfo.balances?.find((elem) => elem.currency === currency).amount >= Number(amount);
+  const sufficientBalance = !amount || (currency && amount && employeeInfo.balances?.find((elem) => elem.currency === currency).amount >= Number(amount));
 
   return (
     <div className="send">

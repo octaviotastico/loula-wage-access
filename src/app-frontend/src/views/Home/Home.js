@@ -52,9 +52,11 @@ function Home() {
     <div className="home">
       <LeftNav balances={employeeInfo.balances || []} />
       <section className="home-content">
-        <Actions />
-        <BalanceList balances={employeeInfo.balances || []} />
-        <TransactionList transactions={transactionsInfo} />
+        <div className="content-wrapper">
+          <Actions />
+          <BalanceList balances={employeeInfo.balances || []} />
+          <TransactionList transactions={transactionsInfo} />
+        </div>
       </section>
     </div>
   );
