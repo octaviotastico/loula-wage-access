@@ -17,5 +17,4 @@ EXPOSE 3000
 ENV NAME World
 
 # Run app.js when the container launches
-RUN ["npm", "start"]
-# ENTRYPOINT [ "sh" ]
+ENTRYPOINT ["npm", "start"]

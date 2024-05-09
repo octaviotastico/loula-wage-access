@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.backend
+    container_name: nodejs-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=database
+      - DB_USER=postgres
+      - DB_PASS=password
+      - DB_NAME=loulawallet
+    depends_on:
+      - database
+
+  database:
+    container_name: postgres-db
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=loulawallet
+    volumes:
+      - ../database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./tmp-db/:/var/lib/postgresql/data/
