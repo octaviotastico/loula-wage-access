@@ -1,7 +1,10 @@
+// Libraries
 import React from 'react';
+
+// Local Components
 import './LeftNav.css';
 
-function LeftNav({ balances }) {
+const LeftNav = ({ balances }) => {
   return (
     <nav className="left-nav">
       <h3>Your Balances</h3>

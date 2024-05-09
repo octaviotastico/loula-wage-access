@@ -16,3 +16,8 @@
   border-bottom: none;
   padding-bottom: 0;
 }
+
+.positive-transaction {
+  color: #72c47c;
+  font-weight: 500;
+}

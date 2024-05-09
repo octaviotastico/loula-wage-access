@@ -1,13 +1,16 @@
+// Libraries
 import React from 'react';
-import { currency_images, currency_symbols } from '../../utils/currency';
+
+// Local Components
+import { currency_images, currency_symbols, formatMoney } from '../../utils/currency';
 import './Balance.css';
 
-function Balance({ balance }) {
+const Balance = ({ balance }) => {
   return (
     <div className="balance">
       <img src={currency_images[balance.currency]} alt={balance.currency} />
       <div className='balance-amount'>
-        {currency_symbols[balance.currency]} {balance.amount}
+        {currency_symbols[balance.currency]} {formatMoney(balance.amount)}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import "./Actions.css";
 
-function Actions() {
+const Actions = () => {
   return (
     <div className="actions">
       <h3>Actions</h3>

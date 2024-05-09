@@ -1,8 +1,11 @@
+// Libraries
 import React from 'react';
+
+// Local Components
 import TransactionItem from '../TransactionItem';
 import './TransactionList.css';
 
-function TransactionList({ transactions }) {
+const TransactionList = ({ transactions }) => {
   return (
     <section className="transactions">
       <h3>Recent Transactions</h3>

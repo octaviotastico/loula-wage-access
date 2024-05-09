@@ -1,8 +1,11 @@
+// Librairies
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+// Local Components
 import './Header.css';
 
-function Header() {
+const Header = () => {
   return (
     <header className="header">
       <h1 className="logo">Loula Wallet</h1>

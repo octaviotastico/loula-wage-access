@@ -1,8 +1,11 @@
+// Library
 import React from 'react';
+
+// Local Components
 import Balance from '../Balance';
 import './BalanceList.css';
 
-function BalanceList({ balances }) {
+const BalanceList = ({ balances }) => {
   return (
     <section className="balances">
       <h3>Your balances</h3>
