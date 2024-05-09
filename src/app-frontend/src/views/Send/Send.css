@@ -35,6 +35,12 @@
   align-items: center;
 }
 
+.error {
+  color: rgb(233, 54, 54);
+  font-weight: 600;
+  font-size: 14px;
+}
+
 .user-input, .currency-select, .to-select, .message-input {
   padding: 8px;
   border-radius: 10px;
@@ -67,6 +73,15 @@
 
 .send-button:hover, .back-button:hover {
   background-color: #8bdb66;
+}
+
+.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.disabled:hover {
+  background-color: #b9b9bd;
 }
 
 .back-button {

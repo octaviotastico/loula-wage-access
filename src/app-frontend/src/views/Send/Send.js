@@ -25,8 +25,8 @@ function Send() {
 
   const [amount, setAmount] = useState("");
   const [formattedAmount, setFormattedAmount] = useState("");
-  const [currency, setCurrency] = useState("USD");
-  const [recipientId, setRecipientId] = useState("E03");
+  const [currency, setCurrency] = useState("");
+  const [recipientId, setRecipientId] = useState("");
   const [description, setDescription] = useState("");
   const [transactionSuccess, setTransactionSuccess] = useState(false);
 
@@ -85,6 +85,8 @@ function Send() {
     );
   }
 
+  const sufficientBalance = currency && amount && employeeInfo.balances?.find((elem) => elem.currency === currency).amount >= Number(amount);
+
   return (
     <div className="send">
       <section className="amount-section">
@@ -99,26 +101,37 @@ function Send() {
             onBlur={formatAmount}
             onFocus={unformatAmount}
           />
-          <select value={currency} className="currency-select" onChange={(e) => setCurrency(e.target.value)}>
+          <select defaultValue="" value={currency} className="currency-select" onChange={(e) => setCurrency(e.target.value)}>
+            <option value="" disabled>Select a currency</option>
             <option>USD</option>
             <option>EUR</option>
             <option>ARS</option>
             <option>GBP</option>
           </select>
         </div>
-        {/* Show balance here depending on selected currency */}
-        <div className="balance-info">
-          <span className="material-symbols-rounded">info</span>
-          <span>
-            Your balance in {currency} is {currency_char[currency]}
-            {formatMoney(employeeInfo.balances?.find((elem) => elem.currency === currency).amount)}
-          </span>
-        </div>
+        {/* Conditionally render balance info or error message based on sufficient balance */}
+        {currency && sufficientBalance && (
+          <div className="balance-info">
+            <span className="material-symbols-rounded">info</span>
+            <span>
+              Your balance in {currency} is {currency_char[currency]}
+              {formatMoney(employeeInfo.balances?.find((elem) => elem.currency === currency).amount)}
+            </span>
+          </div>
+        )}
+
+        {!sufficientBalance && currency && (
+          <div className="balance-info error">
+            <span className="material-symbols-rounded">error</span>
+            <span>Insufficient funds</span>
+          </div>
+        )}
       </section>
 
       <section className="to-section">
         <label>To</label>
-        <select value={recipientId} className="to-select" onChange={(e) => setRecipientId(e.target.value)}>
+        <select defaultValue="" value={recipientId} className="to-select" onChange={(e) => setRecipientId(e.target.value)}>
+          <option value="" disabled>Select a recipient</option>
           <option value="E02">User 2 (E02)</option>
           <option value="E03">User 3 (E03)</option>
         </select>
@@ -135,7 +148,11 @@ function Send() {
       </section>
 
       <section className="send-section">
-        <button className="send-button" onClick={handleSendTransfer}>
+      <button
+          disabled={!amount || !recipientId || !currency || !sufficientBalance}
+          className={`send-button ${!amount || !recipientId || !currency || !sufficientBalance ? "disabled" : ""}`}
+          onClick={handleSendTransfer}
+        >
           Send <span className="material-symbols-rounded">chevron_right</span>
         </button>
       </section>
