@@ -5,9 +5,8 @@ import React from "react";
 import TransactionItem from "../TransactionItem";
 import "./TransactionList.css";
 
-const TransactionList = ({ transactions, loading, error }) => {
+const TransactionList = ({ transactions, loading, error, showTitle = true }) => {
   if (!transactions.length) {
-    console.log("1111111111");
 
     return (
       <section className="transactions">
@@ -23,10 +22,9 @@ const TransactionList = ({ transactions, loading, error }) => {
     );
   }
 
-  console.log("2222222222");
   return (
     <section className="transactions">
-      <h3>Recent Transactions</h3>
+      {showTitle && <h3>Recent Transactions</h3>}
       <div className="transaction-list">
         {transactions.map((transaction) => (
           <TransactionItem key={transaction.transaction_id} transaction={transaction} />

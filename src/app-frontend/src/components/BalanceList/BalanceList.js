@@ -7,7 +7,6 @@ import './BalanceList.css';
 
 const BalanceList = ({ balances, loading, error }) => {
   if (!balances.length) {
-    console.log("1111111111");
     return (
       <section className="balances">
         <h3>Loading your balances</h3>
@@ -21,7 +20,6 @@ const BalanceList = ({ balances, loading, error }) => {
     );
   }
 
-  console.log("2222222222");
   return (
     <section className="balances">
       <h3>Your balances</h3>

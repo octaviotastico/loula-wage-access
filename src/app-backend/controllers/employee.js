@@ -302,8 +302,6 @@ export const requestAdvance = async (req, res) => {
     // Convert available_advance to a number for proper comparison
     const available_advance = Number(available.rows[0].available_advance);
 
-    console.log("Available advance:", available_advance, "Requested advance:", advanceAmount, "Currency:", currency);
-
     // Check for positive advanceAmount and within available limit
     if (advanceAmount > 0 && advanceAmount <= available_advance) {
       // Process the advance

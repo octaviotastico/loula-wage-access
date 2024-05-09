@@ -1,19 +1,64 @@
 .advances {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: calc(100vh - 140px);
+  min-height: calc(100vh - 140px);
   width: 100%;
   gap: 20px;
+}
+
+.advances-container {
+  width: 50%;
+}
+
+.advances-title {
+  font-size: 42px;
+  font-weight: 200;
+}
+
+.advances-subtitles {
+  margin: 30px 0;
+}
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer; /* Indicates an interactive element */
+}
+
+.tooltip-container .tooltip-text {
+  visibility: hidden; /* Initially hidden */
+  width: 280px; /* Adjust width as necessary */
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 14px;
+
+  /* Positioning the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position below the icon */
+  left: 50%; /* Start from the middle of the icon */
+  transform: translateX(-50%); /* Center the tooltip */
+  opacity: 0; /* Start fully transparent */
+
+  /* Transitions for smooth appearance */
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible; /* Make visible when hovered */
+  opacity: 1; /* Fully opaque to be readable */
 }
 
 .amount-section, .to-section, .message-section, .advances-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
-  max-width: 500px;
+  width: 100%;
+  max-width: unset;
   padding: 10px;
 }
 
@@ -26,6 +71,12 @@
   justify-content: space-between;
   gap: 10px;
   width: 100%;
+}
+
+.send-section {
+  width: 100%;
+  max-width: none;
+  margin: 20px 0;
 }
 
 .balance-info {
