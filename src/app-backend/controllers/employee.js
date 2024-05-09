@@ -68,35 +68,6 @@ export const getTransactions = async (req, res) => {
   }
 };
 
-export const requestAdvance = async (req, res) => {
-  const { employeeId, advanceAmount } = req.body;
-  try {
-    const emp = await db.query("SELECT current_balance, monthly_salary FROM employees WHERE employee_id = $1", [
-      employeeId,
-    ]);
-    if (emp.rows.length === 0) {
-      return res.status(404).send("Employee not found");
-    }
-
-    const { current_balance, monthly_salary } = emp.rows[0];
-    if (advanceAmount > monthly_salary) {
-      return res.status(400).send("Request exceeds monthly salary");
-    }
-
-    const newBalance = current_balance + advanceAmount;
-    await db.query("UPDATE employees SET current_balance = $1 WHERE employee_id = $2", [newBalance, employeeId]);
-    await db.query("INSERT INTO salary_advances (employee_id, advance_amount) VALUES ($1, $2)", [
-      employeeId,
-      advanceAmount,
-    ]);
-
-    res.send("Advance granted successfully");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
-  }
-};
-
 export const spendMoney = async (req, res) => {
   const { employeeId, amount, currency, description } = req.body;
   try {
@@ -123,38 +94,9 @@ export const spendMoney = async (req, res) => {
   }
 };
 
-// app.post('/request-access', async (req, res) => {
-//   const { employeeId, requestedAmount, requestedCurrency } = req.body;
-
-//   try {
-//     const emp = await db.query('SELECT * FROM employees WHERE employee_id = $1', [employeeId]);
-//     if (emp.rows.length === 0) {
-//       return res.status(404).send('Employee not found');
-//     }
-
-//     const employee = emp.rows[0];
-//     const rateQuery = await db.query('SELECT rate FROM currency_rates WHERE pair = $1', [`${requestedCurrency}_${employee.currency}`]);
-//     const rate = rateQuery.rows[0].rate;
-//     const convertedRequestAmount = requestedAmount * rate;
-
-//     if (employee.total_earned_wages >= convertedRequestAmount) {
-//       employee.total_earned_wages -= convertedRequestAmount;
-//       // Update the database and process request here
-//       res.send('Request processed successfully');
-//     } else {
-//       res.status(400).send('Insufficient balance');
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Server error');
-//   }
-// });
-
-// Function to perform a transfer
 export const performTransfer = async (req, res) => {
   const { senderId, recipientId, amount, currency, description } = req.body;
 
-  // Start a database transaction
   const client = await db.connect();
 
   try {
@@ -223,3 +165,72 @@ export const performTransfer = async (req, res) => {
     client.release();
   }
 };
+
+export const checkAdvanceAvailable = async (req, res) => {
+  const { employeeId } = req.params;
+  try {
+    const { rows } = await db.query(`
+      SELECT
+        e.monthly_salary - COALESCE(SUM(t.amount), 0) AS available_advance
+      FROM
+        employees e
+      LEFT JOIN
+        transactions t ON e.employee_id = t.employee_id AND t.type = 'wage_advance'
+        AND EXTRACT(YEAR FROM t.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+        AND EXTRACT(MONTH FROM t.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      WHERE
+        e.employee_id = $1
+      GROUP BY
+        e.monthly_salary;
+    `, [employeeId]);
+
+    if (rows.length > 0) {
+      const availableAdvance = rows[0].available_advance > 0 ? rows[0].available_advance : 0;
+      res.json({ availableAdvance });
+    } else {
+      res.status(404).send('Employee not found or no salary information available');
+    }
+  } catch (error) {
+    console.error('Error calculating available advance:', error);
+    res.status(500).send('Server error');
+  }
+}
+
+export const requestAdvance = async (req, res) => {
+  const { employeeId } = req.params;
+  const { advanceAmount } = req.body;
+
+  try {
+    // First, check available advance
+    const available = await db.query(`
+      SELECT e.monthly_salary - COALESCE(SUM(t.amount), 0)
+      AS available_advance
+      FROM employees e
+      LEFT JOIN transactions t
+      ON e.employee_id = t.employee_id AND t.type = 'wage_advance'
+      AND EXTRACT(YEAR FROM t.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+      AND EXTRACT(MONTH FROM t.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      WHERE e.employee_id = $1
+      GROUP BY e.monthly_salary;
+    `, [employeeId]);
+
+    if (available.rows.length === 0) {
+      return res.status(404).send('Employee not found or no salary information available');
+    }
+
+    const { available_advance } = available.rows[0];
+    if (advanceAmount > 0 && advanceAmount <= available_advance) {
+      // Process the advance
+      await db.query(`
+        INSERT INTO transactions (employee_id, type, amount, currency, description, transaction_date)
+        VALUES ($1, 'wage_advance', $2, 'USD', 'Wage advance requested', CURRENT_TIMESTAMP);
+      `, [employeeId, advanceAmount]);
+      res.send({ message: 'Advance processed successfully', advancedAmount: advanceAmount });
+    } else {
+      res.status(400).send('Invalid advance amount requested');
+    }
+  } catch (error) {
+    console.error('Error processing wage advance:', error);
+    res.status(500).send('Server error');
+  }
+}
