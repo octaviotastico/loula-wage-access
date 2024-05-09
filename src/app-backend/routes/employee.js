@@ -6,6 +6,7 @@ import {
   getTransactions,
   // Wage Advance endpoints
   checkAdvanceAvailable,
+  getRequestedAdvances,
   requestAdvance,
   // Transaction endpoints
   performTransfer,
@@ -21,6 +22,7 @@ router.get("/employee/transactions/:employeeId", getTransactions); // Get all th
 
 // Wage Advance endpoints
 router.get("/advance/available/:employeeId", checkAdvanceAvailable); // Check if an advance is available for a specific employee
+router.get("/advance/requested/:employeeId", getRequestedAdvances); // Get all the requested advances of this month for an employee
 router.post("/advance/request/:employeeId", requestAdvance); // Request an advance
 
 // Transaction endpoints

@@ -9,7 +9,8 @@ export const getGeneralInfo = async (req, res) => {
       SELECT
         name,
         total_earnings,
-        monthly_salary
+        monthly_salary,
+        salary_currency
       FROM
         employees
       WHERE
@@ -238,6 +239,41 @@ export const checkAdvanceAvailable = async (req, res) => {
       res.status(500).send('Server error');
     }
 };
+
+export const getRequestedAdvances = async (req, res) => {
+  const { employeeId } = req.params;
+
+  try {
+    const { rows } = await db.query(
+      `
+      SELECT
+        t.transaction_id,
+        t.amount,
+        t.currency,
+        t.description,
+        t.transaction_date
+      FROM
+        transactions t
+      WHERE
+        t.employee_id = $1
+      AND
+        t.type = 'wage_advance'
+      AND
+        EXTRACT(YEAR FROM t.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+      AND
+        EXTRACT(MONTH FROM t.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      ORDER BY
+        t.transaction_date DESC;
+    `,
+      [employeeId]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching employee transactions:", error);
+    res.status(500).send("Server error");
+  }
+}
 
 export const requestAdvance = async (req, res) => {
   const { employeeId } = req.params;
