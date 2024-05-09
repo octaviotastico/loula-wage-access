@@ -76,7 +76,7 @@ const Advances = () => {
   };
 
   const handleAskNewAdvancement = async () => {
-    const payload = { advanceAmount: amount, currency };
+    const payload = { advanceAmount: parseFloat(amount), currency };
 
     try {
       const response = await axios.post(`http://localhost:3000/advance/request/${employeeId}`, payload);
