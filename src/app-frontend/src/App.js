@@ -1,11 +1,9 @@
-// Libraries
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
-// Local Imports
-import Home from './views/Home';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Home from './views/Home';
+import Send from './views/Send';
 
 function App() {
   return (
@@ -13,6 +11,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/send" element={<Send />} />
       </Routes>
       <Footer />
     </Router>

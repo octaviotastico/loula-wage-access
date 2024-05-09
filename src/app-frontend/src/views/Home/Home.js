@@ -1,22 +1,30 @@
 // Libraries
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 // Local Components
-import Actions from '../components/Actions';
-import BalanceList from '../components/BalanceList';
-import LeftNav from '../components/LeftNav';
-import TransactionList from '../components/TransactionList';
+import Actions from '../../components/Actions';
+import BalanceList from '../../components/BalanceList';
+import LeftNav from '../../components/LeftNav';
+import TransactionList from '../../components/TransactionList';
 
 // Styles
 import "./Home.css";
 
 function Home() {
-  const balances = [
-    { currency: 'USD', amount: '1,500' },
-    { currency: 'EUR', amount: '1,200' },
-    { currency: 'ARS', amount: '1,500,000' },
-    { currency: 'GBP', amount: '800' }
-  ];
+  const [employeeInfo, setEmployeeInfo] = useState([]);
+
+  const employeeId = 'E01';
+
+  useEffect(() => {
+    axios.get(`http://localhost:3000/balance/${employeeId}`)
+      .then(response => {
+        setEmployeeInfo(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching balances:', error);
+      });
+  }, [employeeId]);
 
   const transactions = [
     { date: '2024-05-07', description: 'Playstation 5 Pro', amount: '-750', currency: 'USD' },
@@ -29,10 +37,10 @@ function Home() {
 
   return (
     <div className="home">
-      <LeftNav balances={balances} />
+      <LeftNav balances={employeeInfo.balances || []} />
       <section className='home-content'>
         <Actions />
-        <BalanceList balances={balances} />
+        <BalanceList balances={employeeInfo.balances || []} />
         <TransactionList transactions={transactions} />
       </section>
     </div>

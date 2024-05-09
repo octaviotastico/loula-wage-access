@@ -13,6 +13,14 @@ VALUES
   ('WR03', 'E03', 50, 'USD');
 
 INSERT INTO
+  salary_advances (employee_id, advance_amount)
+VALUES
+  ('E01', 1000),
+  ('E02', 200),
+  ('E02', 300),
+  ('E02', 500);
+
+INSERT INTO
   currency_rates (pair, rate)
 VALUES
   ('USD-ARS', 1000),
