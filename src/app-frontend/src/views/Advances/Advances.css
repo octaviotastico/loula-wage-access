@@ -156,3 +156,25 @@
 .success-messages {
   margin: 2px;
 }
+
+.advance-item.loading {
+  display: inline-flex;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.advance-amount-placeholder {
+  width: 100px;
+  height: 30px;
+  background-color: #e0e0e0;
+  border-radius: 100px;
+  display: inline-flex;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

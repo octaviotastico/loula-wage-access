@@ -9,13 +9,15 @@ import { currency_symbols, formatMoney } from "../../utils/currency";
 import { useEmployeeData, useAdvanceData } from "./hooks";
 import "./Advances.css";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const Advances = () => {
   const employeeId = "E01";
   const [amount, setAmount] = useState("");
   const [formattedAmount, setFormattedAmount] = useState("");
   const [transactionSuccess, setTransactionSuccess] = useState(false);
-  const [employeeInfo, currency, setCurrency] = useEmployeeData(employeeId);
-  const [askedAdvances, availableAmount] = useAdvanceData(employeeId);
+  const { employeeInfo, currency, setCurrency, loading: employeeLoading } = useEmployeeData(employeeId);
+  const { askedAdvances, availableAmount, loading, error } = useAdvanceData(employeeId);
   const navigate = useNavigate();
 
   const handleAmountChange = (e) => {
@@ -36,7 +38,7 @@ const Advances = () => {
   const handleAskNewAdvancement = async () => {
     const payload = { advanceAmount: parseFloat(amount), currency };
     try {
-      const response = await axios.post(`http://localhost:3000/advance/request/${employeeId}`, payload);
+      const response = await axios.post(`${API_BASE_URL}/advance/request/${employeeId}`, payload);
       console.log("Transaction sent successfully:", response.data);
       setTransactionSuccess(true);
     } catch (error) {
@@ -64,31 +66,38 @@ const Advances = () => {
       <div className="advances-container">
         <h1 className="advances-title">Available advances for you</h1>
         <h2>
-          Your monthly salary is: {currency_symbols[employeeInfo.salary_currency]}{" "}
-          {formatMoney(employeeInfo.monthly_salary)}
+          Your monthly salary is:{" "}
+          {employeeLoading ? (
+            <div className="advance-item loading">
+              <div className="advance-amount-placeholder"></div>
+            </div>
+          ) : (
+            `${currency_symbols[employeeInfo.salary_currency]} ${formatMoney(employeeInfo.monthly_salary)}`
+          )}
         </h2>
         <div>
-          {askedAdvances.length === 0 ? (
-            <p>You have not requested any advances this month.</p>
-          ) : (
-            <div>
-              <h3 className="advances-subtitles">
-                Requested Advances{" "}
-                <span className="tooltip-container">
-                  <span className="material-symbols-rounded">info</span>
-                  <span className="tooltip-text">
-                    These are all the advances you have requested this month.
-                  </span>
-                </span>
-              </h3>
+          <div>
+            <h3 className="advances-subtitles">
+              Requested Advances{" "}
+              <span className="tooltip-container">
+                <span className="material-symbols-rounded">info</span>
+                <span className="tooltip-text">These are all the advances you have requested this month.</span>
+              </span>
+            </h3>
 
-              <TransactionList transactions={askedAdvances} showTitle={false} />
-            </div>
-          )}
+            <TransactionList transactions={askedAdvances} showTitle={false} loading={loading} error={error} />
+          </div>
         </div>
 
         <h3 className="advances-subtitles">
-          You have left {currency_symbols[availableAmount.currency]} {formatMoney(availableAmount.availableAdvance)}{" "}
+          You have left{" "}
+          {employeeLoading ? (
+            <div className="advance-item loading">
+              <div className="advance-amount-placeholder"></div>
+            </div>
+          ) : (
+            `${currency_symbols[availableAmount.currency]} ${formatMoney(availableAmount.availableAdvance)}`
+          )}
           <span className="tooltip-container">
             <span className="material-symbols-rounded">info</span>
             <span className="tooltip-text">

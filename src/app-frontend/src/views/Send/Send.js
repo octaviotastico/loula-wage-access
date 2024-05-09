@@ -1,96 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-// Styles
 import "./Send.css";
 import { currency_char, formatMoney } from "../../utils/currency";
+import { useEmployeeBalances } from "./hooks"; // Ensure this hook is properly defined as shown earlier
+import axios from "axios";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 function Send() {
-  const [employeeBalances, setEmployeeBalances] = useState([]);
-
   const navigate = useNavigate();
   const employeeId = "E01";
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/employee/balance/${employeeId}`)
-      .then((response) => {
-        const { balances } = response.data || [];
-        setEmployeeBalances(balances);
-      })
-      .catch((error) => {
-        console.error("Error fetching balances:", error);
-      });
-  }, [employeeId]);
+  const { employeeBalances, loading, error } = useEmployeeBalances(employeeId);
 
   const [amount, setAmount] = useState("");
-  const [formattedAmount, setFormattedAmount] = useState("");
   const [currency, setCurrency] = useState("");
   const [recipientId, setRecipientId] = useState("");
   const [description, setDescription] = useState("");
   const [transactionSuccess, setTransactionSuccess] = useState(false);
 
-  const handleSendTransfer = () => {
-    const transaction = {
-      senderId: employeeId, // TODO: Get the sender ID from the logged-in user
-      recipientId,
-      amount,
-      currency,
-      description,
-    };
-
-    axios
-      .post("http://localhost:3000/transactions/transfer", transaction)
-      .then((response) => {
-        console.log("Transaction sent successfully:", response.data);
-        setTransactionSuccess(true);
-      })
-      .catch((error) => {
-        console.error("Error sending transaction:", error);
-      });
-  };
-
   const handleAmountChange = (e) => {
-    setAmount(e.target.value);
-    setFormattedAmount(e.target.value); // Keep both states in sync when typing
+    setAmount(e.target.value.replace(/[^0-9.-]+/g, ""));  // Immediately format input
   };
 
-  const formatAmount = () => {
-    if (!amount) return;
-    const number = Number(amount.replace(/[^0-9.-]+/g, "")); // Convert to a number by removing any non-numeric characters
-    setFormattedAmount(
-      new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: currency,
-      }).format(number)
-    );
-  };
-
-  const unformatAmount = () => {
-    setFormattedAmount(amount); // Reset to plain number when focused
+  const handleSendTransfer = async () => {
+    if (!amount || !recipientId || !currency) return;
+    const transaction = { senderId: employeeId, recipientId, amount: Number(amount), currency, description };
+    try {
+      const response = await axios.post(`${API_BASE_URL}/transactions/transfer`, transaction);
+      console.log("Transaction sent successfully:", response.data);
+      setTransactionSuccess(true);
+    } catch (error) {
+      console.error("Error sending transaction:", error);
+    }
   };
 
   if (transactionSuccess) {
     return (
       <div className="success-message">
-        <h1>
-          Transfer Done Successfully! <span className="done-check material-symbols-rounded">done</span>
-        </h1>
-        <p className="success-messages">Amount: {amount}</p>
+        <h1>Transfer Done Successfully! <span className="done-check material-symbols-rounded">done</span></h1>
+        <p className="success-messages">Amount: {formatMoney(amount)}</p>
         <p className="success-messages">Currency: {currency}</p>
         <p className="success-messages">Recipient ID: {recipientId}</p>
         <p className="success-messages">Description: {description || "Money transfer"}</p>
-        <button className="back-button" onClick={() => navigate("/")}>
-          Return Home
-        </button>
+        <button className="back-button" onClick={() => navigate("/")}>Return Home</button>
       </div>
     );
   }
 
-  const sufficientBalance =
-    !amount ||
-    (currency && amount && employeeBalances.find((elem) => elem.currency === currency).amount >= Number(amount));
+  const sufficientBalance = employeeBalances.find((elem) => elem.currency === currency)?.amount >= Number(amount);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading data.</p>;
 
   return (
     <div className="send">
@@ -99,12 +59,10 @@ function Send() {
         <div className="input-group">
           <input
             type="text"
-            value={formattedAmount}
+            value={amount}
             placeholder="$100"
             className="user-input"
             onChange={handleAmountChange}
-            onBlur={formatAmount}
-            onFocus={unformatAmount}
           />
           <select
             defaultValue=""
@@ -112,30 +70,25 @@ function Send() {
             className="currency-select"
             onChange={(e) => setCurrency(e.target.value)}
           >
-            <option value="" disabled>
-              Select a currency
-            </option>
-            <option>USD</option>
-            <option>EUR</option>
-            <option>ARS</option>
-            <option>GBP</option>
+            <option value="" disabled>Select a currency</option>
+            {Object.keys(currency_char).map((key) => (
+              <option key={key} value={key}>{key}</option>
+            ))}
           </select>
         </div>
-        {/* Conditionally render balance info or error message based on sufficient balance */}
-        {currency && sufficientBalance && (
+        {!sufficientBalance && currency && (
+          <div className="balance-info error">
+            <span className="material-symbols-rounded">error</span>
+            <span>Insufficient funds</span>
+          </div>
+        )}
+        {sufficientBalance && currency && (
           <div className="balance-info">
             <span className="material-symbols-rounded">info</span>
             <span>
               Your balance in {currency} is {currency_char[currency]}
               {formatMoney(employeeBalances.find((elem) => elem.currency === currency).amount)}
             </span>
-          </div>
-        )}
-
-        {!sufficientBalance && currency && (
-          <div className="balance-info error">
-            <span className="material-symbols-rounded">error</span>
-            <span>Insufficient funds</span>
           </div>
         )}
       </section>
@@ -148,9 +101,8 @@ function Send() {
           className="to-select"
           onChange={(e) => setRecipientId(e.target.value)}
         >
-          <option value="" disabled>
-            Select a recipient
-          </option>
+          <option value="" disabled>Select a recipient</option>
+          {/* Generate options dynamically if you have more recipients */}
           <option value="E02">User 2 (E02)</option>
           <option value="E03">User 3 (E03)</option>
         </select>

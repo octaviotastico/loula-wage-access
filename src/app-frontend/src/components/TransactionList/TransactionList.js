@@ -10,7 +10,7 @@ const TransactionList = ({ transactions, loading, error, showTitle = true }) => 
 
     return (
       <section className="transactions">
-        <h3>Loading your recent transactions</h3>
+        {showTitle && <h3>Loading your recent transactions</h3>}
         <div className="transaction-list">
           <TransactionItem loading={loading} error={error} />
           <TransactionItem loading={loading} error={error} />
