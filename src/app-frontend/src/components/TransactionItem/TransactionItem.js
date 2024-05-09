@@ -3,19 +3,10 @@ import React from "react";
 
 // Local Components
 import { formatMoney } from "../../utils/currency";
+import { formatDateWithDay } from "../../utils/dates";
 import "./TransactionItem.css";
 
 const TransactionItem = ({ transaction }) => {
-  const formatDateWithDay = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long", // long, short, or narrow
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
     <div className="transaction-item">
       <div className="transaction-icon">
@@ -24,7 +15,7 @@ const TransactionItem = ({ transaction }) => {
         ) : (
           <span className="material-symbols-rounded">arrow_upward</span>
         )}
-        {transaction.type === "wage_access" && <span class="material-symbols-rounded">paid</span>}
+        {transaction.type === "wage_advance" && <span class="material-symbols-rounded">paid</span>}
       </div>
 
       <section className="transaction-item-info">

@@ -149,7 +149,7 @@ function Send() {
       </section>
 
       <section className="send-section">
-      <button
+        <button
           disabled={!amount || !recipientId || !currency || !sufficientBalance}
           className={`send-button ${!amount || !recipientId || !currency || !sufficientBalance ? "disabled" : ""}`}
           onClick={handleSendTransfer}
