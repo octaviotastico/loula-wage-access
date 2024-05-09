@@ -19,7 +19,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/balance/${employeeId}`)
+      .get(`http://localhost:3000/employee/balance/${employeeId}`)
       .then((response) => {
         setEmployeeInfo(response.data);
       })
@@ -30,7 +30,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/transactions/${employeeId}`)
+      .get(`http://localhost:3000/employee/transactions/${employeeId}`)
       .then((response) => {
         setTransactionsInfo(response.data);
       })
@@ -38,15 +38,6 @@ function Home() {
         console.error("Error fetching balances:", error);
       });
   }, [employeeId]);
-
-  // const transactions = [
-  //   { date: "2024-05-07", description: "Playstation 5 Pro", amount: "-750", currency: "USD" },
-  //   { date: "2024-05-07", description: 'Sony 70" TV', amount: "-1500", currency: "USD" },
-  //   { date: "2024-05-06", description: "Wage Advance", amount: "2000", currency: "USD" },
-  //   { date: "2024-05-05", description: "Food Delivery", amount: "-8500", currency: "ARS" },
-  //   { date: "2024-05-05", description: "Book Purchase", amount: "-60", currency: "EUR" },
-  //   { date: "2024-05-02", description: "Salary", amount: "5000", currency: "USD" },
-  // ];
 
   return (
     <div className="home">

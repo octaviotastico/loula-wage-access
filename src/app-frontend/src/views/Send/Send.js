@@ -14,7 +14,7 @@ function Send() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/balance/${employeeId}`)
+      .get(`http://localhost:3000/employee/balance/${employeeId}`)
       .then((response) => {
         setEmployeeInfo(response.data);
       })
