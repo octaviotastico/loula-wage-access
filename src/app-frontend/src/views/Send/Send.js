@@ -81,12 +81,16 @@ function Send() {
         <p className="success-messages">Currency: {currency}</p>
         <p className="success-messages">Recipient ID: {recipientId}</p>
         <p className="success-messages">Description: {description || "Money transfer"}</p>
-        <button className="back-button" onClick={() => navigate('/')}>Return Home</button>
+        <button className="back-button" onClick={() => navigate("/")}>
+          Return Home
+        </button>
       </div>
     );
   }
 
-  const sufficientBalance = !amount || (currency && amount && employeeBalances.find((elem) => elem.currency === currency).amount >= Number(amount));
+  const sufficientBalance =
+    !amount ||
+    (currency && amount && employeeBalances.find((elem) => elem.currency === currency).amount >= Number(amount));
 
   return (
     <div className="send">
@@ -102,8 +106,15 @@ function Send() {
             onBlur={formatAmount}
             onFocus={unformatAmount}
           />
-          <select defaultValue="" value={currency} className="currency-select" onChange={(e) => setCurrency(e.target.value)}>
-            <option value="" disabled>Select a currency</option>
+          <select
+            defaultValue=""
+            value={currency}
+            className="currency-select"
+            onChange={(e) => setCurrency(e.target.value)}
+          >
+            <option value="" disabled>
+              Select a currency
+            </option>
             <option>USD</option>
             <option>EUR</option>
             <option>ARS</option>
@@ -131,8 +142,15 @@ function Send() {
 
       <section className="to-section">
         <label>To</label>
-        <select defaultValue="" value={recipientId} className="to-select" onChange={(e) => setRecipientId(e.target.value)}>
-          <option value="" disabled>Select a recipient</option>
+        <select
+          defaultValue=""
+          value={recipientId}
+          className="to-select"
+          onChange={(e) => setRecipientId(e.target.value)}
+        >
+          <option value="" disabled>
+            Select a recipient
+          </option>
           <option value="E02">User 2 (E02)</option>
           <option value="E03">User 3 (E03)</option>
         </select>

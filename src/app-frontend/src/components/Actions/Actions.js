@@ -14,8 +14,8 @@ const Actions = () => {
         <button className="action action-grey" onClick={() => navigate('/send')}>
           Send <span className="material-symbols-rounded">arrow_upward</span>
         </button>
-        <button className="action action-green">
-          Wage Access <span className="material-symbols-rounded">arrow_downward</span>
+        <button className="action action-green" onClick={() => navigate('/advances')}>
+          Wage Advances <span className="material-symbols-rounded">arrow_downward</span>
         </button>
       </div>
     </div>

@@ -301,12 +301,15 @@ export const requestAdvance = async (req, res) => {
     }
 
     const { available_advance } = available.rows[0];
+
+    console.log("Available advance:", available_advance, "Requested advance:", advanceAmount);
+
     if (advanceAmount > 0 && advanceAmount <= available_advance) {
       // Process the advance
       await db.query(
         `
         INSERT INTO transactions (employee_id, type, amount, currency, description, transaction_date)
-        VALUES ($1, 'wage_advance', $2, 'USD', 'Wage advance requested', CURRENT_TIMESTAMP);
+        VALUES ($1, 'wage_advance', $2, 'USD', 'Wage advance', CURRENT_TIMESTAMP);
       `,
         [employeeId, advanceAmount]
       );
