@@ -56,6 +56,7 @@ function Send() {
 
   return (
     <section className="send">
+      <h1 className="send-title">Transfer money to one of your contacts</h1>
       <div className="send-container">
         <section className="amount-section">
           <label>You will send</label>
@@ -105,7 +106,7 @@ function Send() {
             onChange={(e) => setRecipientId(e.target.value)}
           >
             <option value="" disabled>Select a recipient</option>
-            {/* Generate options dynamically if you have more recipients */}
+            {/* TODO: Generate options dynamically if you have more recipients */}
             <option value="E02">User 2 (E02)</option>
             <option value="E03">User 3 (E03)</option>
           </select>
@@ -127,7 +128,7 @@ function Send() {
             className={`send-button ${!amount || !recipientId || !currency || !sufficientBalance ? "disabled" : ""}`}
             onClick={handleSendTransfer}
           >
-            Send <span className="material-symbols-rounded">chevron_right</span>
+            Transfer <span className="material-symbols-rounded">chevron_right</span>
           </button>
         </section>
       </div>
