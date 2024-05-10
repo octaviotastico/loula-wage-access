@@ -156,6 +156,14 @@ npm start
 
 ![Transfer Money](./img/front-send-1.png)
 
+### There's also a different design for the home screen in the glassmorphism-test branch
+
+Top:
+![Home Screen Glassmorphism](./img/new-home-1.png)
+
+Bottom:
+![Home Screen Glassmorphism](./img/new-home-2.png)
+
 ### TODOs and improvements for the future
 
 - Add a login screen with SSO, and a way to register new employees.
