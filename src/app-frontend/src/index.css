@@ -30,3 +30,26 @@ h1, h2, h3 {
   'GRAD' 0,
   'opsz' 24
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(50, 58, 64) rgba(0,0,0,0.1);
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+
+*::-webkit-scrollbar-thumb {
+  scrollbar-color: rgb(50, 58, 64) rgba(0,0,0,0.1);
+  border-radius: 10px;
+  border: none;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  scrollbar-color: rgb(50, 58, 64) rgba(0,0,0,0.1);
+}
