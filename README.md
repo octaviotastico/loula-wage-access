@@ -19,36 +19,34 @@ In this wallet application, you can keep track of your balances, in all your cur
 
 ### Frontend
 
-The frontend is build in React, using as low libraries as possible.
+The frontend is build in React, with minimal library dependencies, ensuring a lightweight and efficient application. It only depends on axios for HTTP requests, and react-router for navigation.
 
-It only depends on axios, and react-router, nothing else.
+The interface is organized into three principal sections:
 
-The app is divided in 3 main screens:
-
-1. Home screen: Where you can see your balances, and all your transactions.
-2. Wage Advance screen: Where you can ask for an advance of your salary.
-3. Transfer Money screen: Where you can transfer money to other employees.
+1. **Home screen**: Where employees can see their balances and all their transactions.
+2. **Wage Advance screen**: Where employees have the option to request an advance of their salary.
+3. **Transfer Money screen**: Where employees can transfer money to other employees.
 
 ### Backend
 
-The backend is build in Node.js, using Express.js.
+The backend is build in Node.js with Express.js.
 
-The api consists of these endpoints:
+The API consists of these endpoints:
 
-1. GET `/employee/general/:employeeId`: To get the general information of an employee (name, total earning, monthly salary, and salary currency).
-2. GET `/employee/balance/:employeeId`: To get the balance of an employee in all the currencies that employee has.
-3. GET `/employee/transactions/:employeeId`: To get a list of all the transactions of an employee.
-4. GET `/advance/avaliable/:employeeId`: To get the maximum amount of money an employee can ask for an advance, taking into account the amount of money that employee has already asked for this month.
-5. POST `/advance/requested`: Returns a list of all the advancements the employee has asked for this month.
-6. POST `/advance/request`: To ask for an advance of the salary.
-7. POST `/transactions/transfer`: To make a transfer of money from one employee to another.
-8. POST `/transactions/spend`: To spend money on something that is not in the wallet.
+1. **GET** `/employee/general/:employeeId`: To get the general information of an employee (name, total earning, monthly salary, and salary currency).
+2. **GET** `/employee/balance/:employeeId`: To get the balance of an employee in all the currencies that employee has.
+3. **GET** `/employee/transactions/:employeeId`: To get a list of all the transactions of an employee.
+4. **GET** `/advance/avaliable/:employeeId`: To get the maximum amount of money an employee can ask for an advance, taking into account the amount of money that employee has already asked for this month.
+5. **POST** `/advance/requested`: Returns a list of all the advancements the employee has asked for this month.
+6. **POST** `/advance/request`: To ask for an advance of the salary.
+7. **POST** `/transactions/transfer`: To make a transfer of money from one employee to another.
+8. **POST** `/transactions/spend`: To spend money on something that is not in the wallet.
 
 ### Database
 
-The database is implemented in PostgreSQL, and it has 4 main tables:
+The database is implemented in PostgreSQL, featuring this four primary tables:
 
-1. Employees: To store the general information of the employees.
+1. **Employees**: To store the general information of the employees.
 
 | id | name | total_earning | monthly_salary | salary_currency |
 |----|------|---------------|----------------|-----------------|
@@ -57,7 +55,7 @@ The database is implemented in PostgreSQL, and it has 4 main tables:
 | E03  | Bob | 4,500,000          | 2,000,000           | ARS             |
 ...
 
-2. Employee Balances: To store the balances of the employees in all the currencies they have.
+2. **Employee Balances**: To store the balances of the employees in all the currencies they have.
 
 | balance_id | employee_id | currency | balance |
 |------------|-------------|----------|---------|
@@ -67,7 +65,7 @@ The database is implemented in PostgreSQL, and it has 4 main tables:
 | B05        | E02         | ARS      | 500,000 |
 ...
 
-3. Transactions: To store all the transactions of the employees, including advances, transfers, and spends outside the wallet.
+3. **Transactions**: To store all the transactions of the employees, including advances, transfers, and spends outside the wallet.
 
 | transaction_id | employee_id | type | amount | currency | description | transaction_date | recipient_id | vendor |
 |----------------|-------------|------|--------|----------|-------------|------------------|--------------|--------|
@@ -77,7 +75,7 @@ The database is implemented in PostgreSQL, and it has 4 main tables:
 | 4             | E02         | wage_advance | 500 | EUR      | Wage advance | 2024-05-07 | NULL | NULL |
 ...
 
-4. Currency Rates: To store the currency rates of the day.
+4. **Currency Rates**: To store the currency rates of the day.
 
 | id | pair | rate |
 |----|------|------|
@@ -87,13 +85,13 @@ The database is implemented in PostgreSQL, and it has 4 main tables:
 | 4  | ARS-USD | 0.001 |
 ...
 
-These tables are populated with sample data when the docker-compose is run for the first time. This data is stored in the `src/database/init.sql` file.
+These tables are all populated with sample data when the docker-compose is run for the first time. This data is stored in the `src/database/init.sql` file.
 
 ### Setup
 
-To run the app, you need to have Docker installed.
+To run the app, you can use [Docker](https://docs.docker.com/get-docker/).
 
-Clone the repo:
+Clone the repo, if you haven't done that already:
 
 ```
 git clone https://github.com/octaviotastico/loula-wage-access
@@ -105,7 +103,7 @@ Then, go to the `/src` directory:
 cd loula-wage-access/src
 ```
 
-Run the docker-compose command:
+Run the docker-compose command from there:
 
 ```
 docker compose -f ./docker/docker-compose.yml up --build
@@ -114,11 +112,11 @@ docker compose -f ./docker/docker-compose.yml up --build
 **Important Note**: Your terminal has to be in the `/src` directory.
 
 
-If instead of using Docker, you were to run the app locally instead, you would need to have a PostgreSQL database running, and run the `init.sql` file to create the needed database, tables, and populate them.
+If instead of using Docker, you were to run the app locally instead, you would need to have a [PostgreSQL database](https://www.postgresql.org/download/) running, and run the `init.sql` file to create the needed database, tables, and populate them.
 
 I added the .env on purpose, so anyone can run this easily.
 
-For the frontend, you would need to run:
+For the **frontend**, you would need to run:
 
 ```
 cd src/app-frontend
@@ -126,13 +124,15 @@ npm install
 npm start
 ```
 
-And for the backend:
+And for the **backend**:
 
 ```
 cd src/app-backend
 npm install
 npm start
 ```
+
+To populate the database with sample data, you can run the `init.sql` file, located in the `src/database` directory. You can simply copy the content and paste it in pgAdmin, or any other PostgreSQL client you might have.
 
 ### Screenshots
 
