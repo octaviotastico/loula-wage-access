@@ -33,7 +33,7 @@ h1, h2, h3 {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(50, 58, 64) rgba(0,0,0,0.1);
+  scrollbar-color: rgb(132, 122, 181) rgba(0,0,0,0.1);
 }
 
 *::-webkit-scrollbar {

@@ -1,11 +1,16 @@
 .transaction-item {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);;
   width: calc(100% - 40px);
   height: 70px;
   align-items: center;
   padding: 0 20px;
+}
+
+.transaction-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
 }
 
 .transaction-item:first-child {

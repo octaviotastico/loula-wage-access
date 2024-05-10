@@ -23,16 +23,25 @@
 
 .action-grey {
   background-color: #16330014;
+
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 .action-grey:hover {
-  background-color: #1633001f;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .action-green {
   background-color: #9fe870;
+  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .action-green:hover {
-  background-color: #8bdb66;
+  background-color: #95f36a;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
