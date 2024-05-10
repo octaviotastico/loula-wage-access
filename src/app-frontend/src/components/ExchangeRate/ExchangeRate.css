@@ -2,13 +2,13 @@
   outline: 1px solid #18003371;
   padding: 20px 30px;
   border-radius: 10px;
-  width: fit-content;
-  min-width: 175px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  width: fit-content;
+  margin: 10px 1px;
 }
 
 .exchange-rate-amount {
@@ -52,4 +52,32 @@
   50% {
     opacity: 0.5;
   }
+}
+
+.exchange-title {
+  margin-top: 0;
+}
+
+.exchange-card {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.exchange-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.exchange-text {
+  margin: 0;
+  text-wrap: nowrap;
+}
+
+.exchange-images {
+  width: 50px;
 }

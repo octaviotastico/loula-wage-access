@@ -15,4 +15,5 @@
 
 .content-wrapper {
   align-self: center;
+  max-width: 70vw;
 }

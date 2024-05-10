@@ -1,4 +1,10 @@
+.exchange-rate-section {
+  margin-top: 30px;
+}
+
 .exchange-rate-list {
   display: flex;
   gap: 10px;
+  flex-wrap: nowrap;
+  overflow: auto;
 }

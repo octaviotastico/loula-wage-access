@@ -1,3 +1,3 @@
-import Balance from "./Balance";
+import ExchangeRate from "./ExchangeRate";
 
-export default Balance;
+export default ExchangeRate;

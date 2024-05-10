@@ -1,17 +1,16 @@
 // Library
-import React from 'react';
+import React from "react";
 
 // Local Components
-import ExchangeRate from '../ExchangeRate';
-import './ExchangeRateList.css';
+import ExchangeRate from "../ExchangeRate";
+import "./ExchangeRateList.css";
 
 const ExchangeRateList = ({ exchangeRate, loading, error }) => {
   if (!exchangeRate.length) {
     return (
-      <section className="exchangeRate">
-        <h3>Loading your exchangeRate</h3>
-        <div className="balance-list">
-          <ExchangeRate loading={loading} error={error} />
+      <section>
+        <h3>Loading current exchange rates</h3>
+        <div className="exchange-rate-list">
           <ExchangeRate loading={loading} error={error} />
           <ExchangeRate loading={loading} error={error} />
           <ExchangeRate loading={loading} error={error} />
@@ -21,15 +20,15 @@ const ExchangeRateList = ({ exchangeRate, loading, error }) => {
   }
 
   return (
-    <section className="exchangeRate">
-      <h3>Your exchangeRate</h3>
-      <div className="balance-list">
-        {exchangeRate.map((balance) => (
-          <ExchangeRate key={balance.currency} balance={balance} />
+    <section className="exchange-rate-section">
+      <h3>Current exchange rates</h3>
+      <div className="exchange-rate-list">
+        {exchangeRate.map((exchangeRate) => (
+          <ExchangeRate key={exchangeRate.currency} exchangeRate={exchangeRate} />
         ))}
       </div>
     </section>
   );
-}
+};
 
 export default ExchangeRateList;

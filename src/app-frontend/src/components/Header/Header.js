@@ -8,7 +8,11 @@ import './Header.css';
 const Header = () => {
   return (
     <header className="header">
-      <h1 className="logo">Loula Wallet</h1>
+      <h1 className="logo">
+        <Link to="/" className="logo">
+          Loula Wallet
+        </Link>
+      </h1>
       <nav>
         <ul>
           <li><Link to="/">Home</Link></li>
