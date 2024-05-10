@@ -11,19 +11,11 @@
 
 ### About
 
-The main goal of this coding challenge is to build simple wage access platform, that has the feature of allowing the employees that use it, to have early access to earned wages.
+The Loula Wage Access coding challenge aims to create a simple wage access platform allowing employees to request early access to their earned wages. This platform enables employees to request an advance of their salary within a specified range, enhancing financial flexibility and control.
 
-The main idea is that, if an employee earns X amount of money per month, it can ask for an advance of Y amount of money, if Y is a number in the range [0, X].
+The main idea is that, if an employee earns X amount of money per month, it can ask for an advance of Y amount of money, if Y is a number in the range [0, X]. For example, if the employee earns 5000 usd a month, then he/she can ask for an advance of up to 5000 usd that will be paid next month when he/she gets paid their salary. It could ask for 1000, 3000, or 5000, but not more than that.
 
-For example, if the employee earns 5000 usd a month, then he/she can ask for an advance of up to 5000 usd that will be paid next month when he/she gets paid their salary. It could ask for 1000, 3000, or 5000, but not more than that.
-
-In this wallet application, you can keep track of your balances, in all your currencies, and ask for advances depending on the currency you earn your salary monthly.
-
-As an extra step, I implemented the functionality to allow the user make transfers to other employees, and to spend money on things that are outside the wallet (for example a shop).
-
-
-
-Note: Your terminal has to be in the `/src` directory.
+In this wallet application, you can keep track of your balances, in all your currencies, and ask for advances depending on the currency you earn your salary monthly. As an extra step, I implemented the functionality to allow the user make transfers to other employees, and to spend money on things that are outside the wallet (for example a shop).
 
 ### Frontend
 
@@ -97,15 +89,32 @@ The database is implemented in PostgreSQL, and it has 4 main tables:
 
 These tables are populated with sample data when the docker-compose is run for the first time. This data is stored in the `src/database/init.sql` file.
 
-### How to run
+### Setup
 
-The app is dockerized, and you can run it by simply doing:
+To run the app, you need to have Docker installed.
+
+Clone the repo:
+
+```
+git clone https://github.com/octaviotastico/loula-wage-access
+```
+
+Then, go to the `/src` directory:
+
+```
+cd loula-wage-access/src
+```
+
+Run the docker-compose command:
 
 ```
 docker compose -f ./docker/docker-compose.yml up --build
 ```
 
-If you were to run the app locally instead, you would need to have a PostgreSQL database running, and run the `init.sql` file to create the needed database, tables, and populate them.
+**Important Note**: Your terminal has to be in the `/src` directory.
+
+
+If instead of using Docker, you were to run the app locally instead, you would need to have a PostgreSQL database running, and run the `init.sql` file to create the needed database, tables, and populate them.
 
 I added the .env on purpose, so anyone can run this easily.
 
@@ -153,3 +162,4 @@ npm start
 - Add the possibility to add new employees as contacts, to make transfers.
 - Add more features to the wallet, like the possibility to add a new currency, and to exchange money between them.
 - Update the currency rates daily, and store them in the database.
+- Mage get transactions endpoint to have a limit and offset, to avoid getting all the transactions at once.
