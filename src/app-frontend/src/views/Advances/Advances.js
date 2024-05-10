@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -19,9 +19,15 @@ const Advances = () => {
   const [transactionSuccess, setTransactionSuccess] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("");
 
-  const { employeeInfo, loadingEmployeeData } = useEmployeeData(employeeId, (data) => setSelectedCurrency(data.salary_currency));
+  const { employeeInfo, loadingEmployeeData } = useEmployeeData(employeeId);
   const { askedAdvances, loadingAskedAdvances, errorAskedAdvances } = useAskedAdvances(employeeId);
   const { availableAmount, loadingAvailableAmount, errorAvailableAmount } = useAvailableAdvance(employeeId);
+
+  useEffect(() => {
+    if (employeeInfo) {
+      setSelectedCurrency(employeeInfo.salary_currency);
+    }
+  }, [employeeInfo]);
 
   const navigate = useNavigate();
 
@@ -41,7 +47,7 @@ const Advances = () => {
   };
 
   const handleAskNewAdvancement = async () => {
-    const payload = { advanceAmount: parseFloat(amount), selectedCurrency };
+    const payload = { advanceAmount: parseFloat(amount), currency: selectedCurrency };
     try {
       const response = await axios.post(`${API_BASE_URL}/advance/request/${employeeId}`, payload);
       console.log("Transaction sent successfully:", response.data);
@@ -72,6 +78,7 @@ const Advances = () => {
         <h1 className="advances-title">Available advances for you</h1>
         <h2>
           Your monthly salary is:{" "}
+          {console.log({employeeInfo, loadingEmployeeData})}
           {loadingEmployeeData ? (
             <div className="advance-item loading">
               <div className="advance-amount-placeholder"></div>
@@ -155,7 +162,7 @@ const Advances = () => {
             className={`send-button ${
               !amount || !selectedCurrency || Number(amount) > Number(availableAmount.availableAdvance) ? "disabled" : ""
             }`}
-            onClick={handleAskNewAdvancement}
+            onClick={() => handleAskNewAdvancement()}
           >
             Get advance <span className="material-symbols-rounded">chevron_right</span>
           </button>

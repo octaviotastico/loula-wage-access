@@ -1,3 +1,4 @@
+import { isValidPair } from "../commons/sanitization.js";
 import db from "../config/db.js";
 
 // Returns all exchange rates from currency_rates table
@@ -21,6 +22,10 @@ export const getExchangeRates = async (req, res) => {
 // Returns exchange rate for a given currency pair
 export const getExchangeRate = async (req, res) => {
   const { pair } = req.params;
+
+  if (!isValidPair(employeeId)) {
+    return res.status(400).send("Invalid currency pair");
+  }
 
   try {
     const { rows } = await db.query(`

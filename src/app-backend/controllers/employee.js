@@ -1,11 +1,15 @@
+import { isValidEmployeeId } from "../commons/sanitization.js";
 import db from "../config/db.js";
 
 export const getGeneralInfo = async (req, res) => {
   const { employeeId } = req.params;
 
+  if (!isValidEmployeeId(employeeId)) {
+    return res.status(400).send("Invalid employee ID");
+  }
+
   try {
-    const { rows } = await db.query(
-      `
+    const { rows } = await db.query(`
       SELECT
         name,
         total_earnings,
@@ -15,9 +19,7 @@ export const getGeneralInfo = async (req, res) => {
         employees
       WHERE
         employee_id = $1;
-    `,
-      [employeeId]
-    );
+    `, [employeeId]);
 
     if (rows.length > 0) {
       res.json(rows[0]);
@@ -33,9 +35,12 @@ export const getGeneralInfo = async (req, res) => {
 export const getBalance = async (req, res) => {
   const { employeeId } = req.params;
 
+  if (!isValidEmployeeId(employeeId)) {
+    return res.status(400).send("Invalid employee ID");
+  }
+
   try {
-    const { rows } = await db.query(
-      `
+    const { rows } = await db.query(`
       SELECT
         json_agg(
           json_build_object(
@@ -51,9 +56,7 @@ export const getBalance = async (req, res) => {
         e.employee_id = $1
       GROUP BY
         e.employee_id;
-    `,
-      [employeeId]
-    );
+    `, [employeeId]);
 
     if (rows.length > 0) {
       res.json(rows[0]);

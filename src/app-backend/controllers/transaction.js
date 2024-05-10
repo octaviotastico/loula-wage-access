@@ -1,11 +1,15 @@
+import { isValidAmount, isValidCurrency, isValidEmployeeId, sanitizeDescription } from "../commons/sanitization.js";
 import db from "../config/db.js";
 
 export const getTransactions = async (req, res) => {
   const { employeeId } = req.params;
 
+  if (!isValidEmployeeId(employeeId)) {
+    return res.status(400).send("Invalid employee ID");
+  }
+
   try {
-    const { rows } = await db.query(
-      `
+    const { rows } = await db.query(`
       SELECT
         t.transaction_id,
         t.type,
@@ -23,9 +27,7 @@ export const getTransactions = async (req, res) => {
         t.employee_id = $1
       ORDER BY
         t.transaction_date DESC;
-    `,
-      [employeeId]
-    );
+    `, [employeeId]);
 
     res.json(rows);
   } catch (error) {
@@ -36,6 +38,21 @@ export const getTransactions = async (req, res) => {
 
 export const spendMoney = async (req, res) => {
   const { employeeId, amount, currency, description } = req.body;
+
+  if (!isValidEmployeeId(employeeId)) {
+    return res.status(400).send("Invalid employee ID");
+  }
+
+  if (!isValidAmount(amount)) {
+    return res.status(400).send("Invalid amount");
+  }
+
+  if (isValidCurrency(currency)) {
+    return res.status(400).send("Invalid currency");
+  }
+
+  const sanitizedDescription = sanitizeDescription(description);
+
   try {
     const emp = await db.query("SELECT current_balance FROM employees WHERE employee_id = $1", [employeeId]);
     if (emp.rows.length === 0) {
@@ -50,7 +67,7 @@ export const spendMoney = async (req, res) => {
     await db.query("UPDATE employees SET current_balance = $1 WHERE employee_id = $2", [newBalance, employeeId]);
     await db.query(
       "INSERT INTO transactions (employee_id, type, amount, currency, description, transaction_date) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)",
-      [employeeId, "spend", amount, currency, description]
+      [employeeId, "spend", amount, currency, sanitizedDescription]
     );
 
     res.send("Transaction recorded successfully");
@@ -62,6 +79,24 @@ export const spendMoney = async (req, res) => {
 
 export const performTransfer = async (req, res) => {
   const { senderId, recipientId, amount, currency, description } = req.body;
+
+  if (!isValidEmployeeId(senderId)) {
+    return res.status(400).send("Invalid sender ID");
+  }
+
+  if (!isValidEmployeeId(recipientId)) {
+    return res.status(400).send("Invalid recipient ID");
+  }
+
+  if (!isValidAmount(amount)) {
+    return res.status(400).send("Invalid amount");
+  }
+
+  if (isValidCurrency(currency)) {
+    return res.status(400).send("Invalid currency");
+  }
+
+  const sanitizedDescription = sanitizeDescription(description);
 
   const client = await db.connect();
 
@@ -117,7 +152,7 @@ export const performTransfer = async (req, res) => {
       senderId,
       -amount, // Negative amount to show negative balance on frontend
       currency,
-      description,
+      sanitizedDescription,
       recipientId,
     ]);
 

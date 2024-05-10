@@ -1,53 +1,61 @@
+import { isValidEmployeeId } from "../commons/sanitization.js";
 import db from "../config/db.js";
 
 export const checkAdvanceAvailable = async (req, res) => {
   const { employeeId } = req.params;
 
-    try {
-      const { rows } = await db.query(`
-        SELECT
-          e.monthly_salary,
-          e.salary_currency,
-          e.monthly_salary - COALESCE(
-            SUM(t.amount / CASE WHEN t.currency = e.salary_currency THEN 1 ELSE cr.rate END),
-            0
-          ) AS available_advance
-        FROM
-          employees e
-        LEFT JOIN
-          transactions t ON e.employee_id = t.employee_id
-          AND t.type = 'wage_advance'
-          AND EXTRACT(YEAR FROM t.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
-          AND EXTRACT(MONTH FROM t.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
-        LEFT JOIN
-          currency_rates cr ON (t.currency || '_' || e.salary_currency) = cr.pair
-        WHERE
-          e.employee_id = $1
-        GROUP BY
-          e.employee_id, e.monthly_salary, e.salary_currency;
-      `, [employeeId]);
+  if (!isValidEmployeeId(employeeId)) {
+    return res.status(400).send("Invalid employee ID");
+  }
 
-      if (rows.length > 0) {
-        const { available_advance, salary_currency } = rows[0];
-        res.json({
-          availableAdvance: Math.max(available_advance, 0), // Ensure non-negative availability
-          currency: salary_currency
-        });
-      } else {
-        res.status(404).send('Employee not found');
-      }
-    } catch (error) {
-      console.error('Error calculating available advance:', error);
-      res.status(500).send('Server error');
+  try {
+    const { rows } = await db.query(`
+      SELECT
+        e.monthly_salary,
+        e.salary_currency,
+        e.monthly_salary - COALESCE(
+          SUM(t.amount / CASE WHEN t.currency = e.salary_currency THEN 1 ELSE cr.rate END),
+          0
+        ) AS available_advance
+      FROM
+        employees e
+      LEFT JOIN
+        transactions t ON e.employee_id = t.employee_id
+        AND t.type = 'wage_advance'
+        AND EXTRACT(YEAR FROM t.transaction_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+        AND EXTRACT(MONTH FROM t.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      LEFT JOIN
+        currency_rates cr ON (t.currency || '_' || e.salary_currency) = cr.pair
+      WHERE
+        e.employee_id = $1
+      GROUP BY
+        e.employee_id, e.monthly_salary, e.salary_currency;
+    `, [employeeId]);
+
+    if (rows.length > 0) {
+      const { available_advance, salary_currency } = rows[0];
+      res.json({
+        availableAdvance: Math.max(available_advance, 0), // Ensure non-negative availability
+        currency: salary_currency
+      });
+    } else {
+      res.status(404).send('Employee not found');
     }
+  } catch (error) {
+    console.error('Error calculating available advance:', error);
+    res.status(500).send('Server error');
+  }
 };
 
 export const getRequestedAdvances = async (req, res) => {
   const { employeeId } = req.params;
 
+  if (!isValidEmployeeId(employeeId)) {
+    return res.status(400).send("Invalid employee ID");
+  }
+
   try {
-    const { rows } = await db.query(
-      `
+    const { rows } = await db.query(`
       SELECT
         t.transaction_id,
         t.amount,
@@ -66,9 +74,7 @@ export const getRequestedAdvances = async (req, res) => {
         EXTRACT(MONTH FROM t.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
       ORDER BY
         t.transaction_date DESC;
-    `,
-      [employeeId]
-    );
+    `, [employeeId]);
 
     res.json(rows);
   } catch (error) {
@@ -83,8 +89,7 @@ export const requestAdvance = async (req, res) => {
 
   try {
     // First, check available advance
-    const available = await db.query(
-      `
+    const available = await db.query(`
       SELECT (e.monthly_salary - COALESCE(SUM(t.amount), 0)) AS available_advance
       FROM employees e
       LEFT JOIN transactions t ON e.employee_id = t.employee_id AND t.type = 'wage_advance'
@@ -93,9 +98,7 @@ export const requestAdvance = async (req, res) => {
         AND EXTRACT(MONTH FROM t.transaction_date) = EXTRACT(MONTH FROM CURRENT_DATE)
       WHERE e.employee_id = $1
       GROUP BY e.monthly_salary;
-      `,
-      [employeeId, currency]
-    );
+    `, [employeeId, currency]);
 
     if (available.rows.length === 0) {
       return res.status(404).send("Employee not found or no salary information available");

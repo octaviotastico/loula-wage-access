@@ -6,27 +6,22 @@ import Balance from '../Balance';
 import './BalanceList.css';
 
 const BalanceList = ({ balances, loading, error }) => {
-  if (!balances.length) {
-    return (
-      <section className="balances">
-        <h3>Loading your balances</h3>
-        <div className="balance-list">
-          <Balance loading={loading} error={error} />
-          <Balance loading={loading} error={error} />
-          <Balance loading={loading} error={error} />
-          <Balance loading={loading} error={error} />
-        </div>
-      </section>
-    );
-  }
+  const renderPlaceholderBalances = () => {
+    const placeholders = Array.from({ length: 4 }, (_, index) => (
+      <Balance key={`placeholder-${index}`} loading={loading} error={error} />
+    ));
+    return <>{placeholders}</>;
+  };
 
   return (
     <section className="balances">
-      <h3>Your balances</h3>
+      <h3>{!balances.length ? "Loading your balances" : "Your balances"}</h3>
       <div className="balance-list">
-        {balances.map((balance) => (
-          <Balance key={balance.currency} balance={balance} />
-        ))}
+        {!balances.length ? renderPlaceholderBalances() : (
+          balances.map((balance) => (
+            <Balance key={balance.currency} balance={balance} />
+          ))
+        )}
       </div>
     </section>
   );

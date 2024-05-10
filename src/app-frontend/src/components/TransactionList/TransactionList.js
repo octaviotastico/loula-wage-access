@@ -6,29 +6,22 @@ import TransactionItem from "../TransactionItem";
 import "./TransactionList.css";
 
 const TransactionList = ({ transactions, loading, error, showTitle = true }) => {
-  if (!transactions.length) {
-
-    return (
-      <section className="transactions">
-        {showTitle && <h3>Loading your recent transactions</h3>}
-        <div className="transaction-list">
-          <TransactionItem loading={loading} error={error} />
-          <TransactionItem loading={loading} error={error} />
-          <TransactionItem loading={loading} error={error} />
-          <TransactionItem loading={loading} error={error} />
-          <TransactionItem loading={loading} error={error} />
-        </div>
-      </section>
-    );
-  }
+  const renderPlaceholderItems = () => {
+    const placeholders = Array.from({ length: 5 }, (_, index) => (
+      <TransactionItem key={`placeholder-${index}`} loading={loading} error={error} />
+    ));
+    return <>{placeholders}</>;
+  };
 
   return (
     <section className="transactions">
-      {showTitle && <h3>Recent Transactions</h3>}
+      {showTitle && <h3>{!transactions.length ? "Loading your recent transactions" : "Recent Transactions"}</h3>}
       <div className="transaction-list">
-        {transactions.map((transaction) => (
-          <TransactionItem key={transaction.transaction_id} transaction={transaction} />
-        ))}
+        {!transactions.length ? renderPlaceholderItems() : (
+          transactions.map((transaction) => (
+            <TransactionItem key={transaction.transaction_id} transaction={transaction} />
+          ))
+        )}
       </div>
     </section>
   );
