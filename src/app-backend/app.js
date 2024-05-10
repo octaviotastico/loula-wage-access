@@ -7,6 +7,7 @@ import cors from 'cors';
 import advanceRoutes from './routes/advance.js';
 import employeeRoutes from './routes/employee.js';
 import transactionRoutes from './routes/transaction.js';
+import exchangeRoutes from './routes/exchange.js';
 
 // App configuration
 const PORT = process.env.APP_PORT || 3000;
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/advance', advanceRoutes);
 app.use('/employee', employeeRoutes);
 app.use('/transactions', transactionRoutes);
+app.use('/exchange', exchangeRoutes);
 app.get('/', (_, res) => {
   res.send('Wage Access Platform API is alive!');
 });
