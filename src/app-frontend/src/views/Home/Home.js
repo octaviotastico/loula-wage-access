@@ -21,7 +21,7 @@ function useEmployeeData(employeeId) {
     async function fetchData() {
       try {
         const balanceResponse = await axios.get(`${API_BASE_URL}/employee/balance/${employeeId}`);
-        const transactionsResponse = await axios.get(`${API_BASE_URL}/employee/transactions/${employeeId}`);
+        const transactionsResponse = await axios.get(`${API_BASE_URL}/transactions/${employeeId}`);
 
         setEmployeeBalances(balanceResponse.data.balances || []);
         setTransactionsInfo(transactionsResponse.data || []);
