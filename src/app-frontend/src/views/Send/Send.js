@@ -6,7 +6,7 @@ import axios from "axios";
 // Local Components
 import { API_BASE_URL } from "../../utils/constants";
 import { currency_char, formatMoney } from "../../utils/currency";
-import { useEmployeeBalances } from "./hooks";
+import { useEmployeeBalances } from "../../hooks/useEmployeeBalance";
 import "./Send.css";
 
 function Send() {

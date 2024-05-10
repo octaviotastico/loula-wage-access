@@ -6,8 +6,10 @@ import axios from "axios";
 // Local Components
 import TransactionList from "../../components/TransactionList";
 import { currency_symbols, formatMoney } from "../../utils/currency";
+import { useEmployeeData } from "../../hooks/useEmployeeData";
+import { useAvailableAdvance } from "../../hooks/useAvailableAdvance";
+import { useAskedAdvances } from "../../hooks/useAskedAdvances";
 import { API_BASE_URL } from "../../utils/constants";
-import { useEmployeeData, useAdvanceData } from "./hooks";
 import "./Advances.css";
 
 const Advances = () => {
@@ -15,8 +17,12 @@ const Advances = () => {
   const [amount, setAmount] = useState("");
   const [formattedAmount, setFormattedAmount] = useState("");
   const [transactionSuccess, setTransactionSuccess] = useState(false);
-  const { employeeInfo, currency, setCurrency, loading: employeeLoading } = useEmployeeData(employeeId);
-  const { askedAdvances, availableAmount, loading, error } = useAdvanceData(employeeId);
+  const [selectedCurrency, setSelectedCurrency] = useState("");
+
+  const { employeeInfo, loadingEmployeeData } = useEmployeeData(employeeId, (data) => setSelectedCurrency(data.salary_currency));
+  const { askedAdvances, loadingAskedAdvances, errorAskedAdvances } = useAskedAdvances(employeeId);
+  const { availableAmount, loadingAvailableAmount, errorAvailableAmount } = useAvailableAdvance(employeeId);
+
   const navigate = useNavigate();
 
   const handleAmountChange = (e) => {
@@ -27,7 +33,7 @@ const Advances = () => {
 
   const formatAmount = () => {
     const number = Number(amount.replace(/[^0-9.-]+/g, ""));
-    setFormattedAmount(new Intl.NumberFormat("en-US", { style: "currency", currency }).format(number));
+    setFormattedAmount(new Intl.NumberFormat("en-US", { style: "currency", selectedCurrency }).format(number));
   };
 
   const unformatAmount = () => {
@@ -35,7 +41,7 @@ const Advances = () => {
   };
 
   const handleAskNewAdvancement = async () => {
-    const payload = { advanceAmount: parseFloat(amount), currency };
+    const payload = { advanceAmount: parseFloat(amount), selectedCurrency };
     try {
       const response = await axios.post(`${API_BASE_URL}/advance/request/${employeeId}`, payload);
       console.log("Transaction sent successfully:", response.data);
@@ -52,7 +58,7 @@ const Advances = () => {
           Advance Asked Successfully! <span className="done-check material-symbols-rounded">done</span>
         </h1>
         <p className="success-messages">Amount: {formattedAmount}</p>
-        <p className="success-messages">Currency: {currency}</p>
+        <p className="success-messages">Currency: {selectedCurrency}</p>
         <button className="back-button" onClick={() => navigate("/")}>
           Return Home
         </button>
@@ -66,7 +72,7 @@ const Advances = () => {
         <h1 className="advances-title">Available advances for you</h1>
         <h2>
           Your monthly salary is:{" "}
-          {employeeLoading ? (
+          {loadingEmployeeData ? (
             <div className="advance-item loading">
               <div className="advance-amount-placeholder"></div>
             </div>
@@ -84,19 +90,27 @@ const Advances = () => {
               </span>
             </h3>
 
-            <TransactionList transactions={askedAdvances} showTitle={false} loading={loading} error={error} />
+            <TransactionList transactions={askedAdvances} showTitle={false} loading={loadingAskedAdvances} error={errorAskedAdvances} />
           </div>
         </div>
 
         <h3 className="advances-subtitles">
           You have left{" "}
-          {employeeLoading ? (
+          {loadingAvailableAmount ? (
             <div className="advance-item loading">
               <div className="advance-amount-placeholder"></div>
             </div>
           ) : (
             `${currency_symbols[availableAmount.currency]} ${formatMoney(availableAmount.availableAdvance)}`
           )}
+
+          {errorAvailableAmount && (
+            <div className="balance-info error">
+              <span className="material-symbols-rounded">error</span>
+              <span>Error loading available advance</span>
+            </div>
+          )}
+
           <span className="tooltip-container">
             <span className="material-symbols-rounded">info</span>
             <span className="tooltip-text">
@@ -118,7 +132,7 @@ const Advances = () => {
               onBlur={formatAmount}
               onFocus={unformatAmount}
             />
-            <select value={currency} className="currency-select" onChange={(e) => setCurrency(e.target.value)}>
+            <select value={selectedCurrency} className="currency-select" onChange={(e) => setSelectedCurrency(e.target.value)}>
               <option value="" disabled>
                 Select a currency
               </option>
@@ -137,9 +151,9 @@ const Advances = () => {
         </section>
         <section className="send-section">
           <button
-            disabled={!amount || !currency || Number(amount) > Number(availableAmount.availableAdvance)}
+            disabled={!amount || !selectedCurrency || Number(amount) > Number(availableAmount.availableAdvance)}
             className={`send-button ${
-              !amount || !currency || Number(amount) > Number(availableAmount.availableAdvance) ? "disabled" : ""
+              !amount || !selectedCurrency || Number(amount) > Number(availableAmount.availableAdvance) ? "disabled" : ""
             }`}
             onClick={handleAskNewAdvancement}
           >
